@@ -9,3 +9,4 @@ pydub
 gunicorn
 gtts 
 numpy
+python-multipart
