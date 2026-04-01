@@ -4,6 +4,9 @@ const sendBtn = document.getElementById('send-btn');
 const micBtn = document.getElementById('mic-btn');
 const clearChatBtn = document.getElementById('clear-chat-btn');
 const suggestionChips = document.getElementById('suggestion-chips');
+const chatToggleBtn = document.getElementById('chat-toggle-btn');
+const appWrapper = document.getElementById('app-wrapper');
+const minimizeBtn = document.getElementById('minimize-btn');
 
 const API_URL = '/chat';
 const VOICE_API_URL = '/chat/voice';
@@ -188,88 +191,95 @@ userInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') handleSendMessage();
 });
 
-// Suggestion chips
-if (suggestionChips) {
-    suggestionChips.addEventListener('click', (e) => {
-        const chip = e.target.closest('.chip');
-        if (chip) {
-            const query = chip.getAttribute('data-query');
-            handleSendMessage(query);
+// Reliable Global Event Delegation for main buttons
+document.addEventListener('click', (e) => {
+    // Chat Widget Toggle
+    const toggleBtn = e.target.closest('#chat-toggle-btn');
+    if (toggleBtn) {
+        const appWrap = document.getElementById('app-wrapper');
+        const input = document.getElementById('user-input');
+        if (appWrap) appWrap.classList.toggle('minimized');
+        if (appWrap && !appWrap.classList.contains('minimized') && input) {
+            input.focus();
         }
-    });
-}
-
-// Clear chat
-if (clearChatBtn) {
-    clearChatBtn.addEventListener('click', () => {
-
-        // clear only messages
-        const messages = chatContainer.querySelectorAll('.message');
-        messages.forEach(m => m.remove());
-
-        // reset welcome cleanly WITHOUT nuking container
-        chatStarted = false;
-
-        // remove old welcome if exists
-        const oldWelcome = chatContainer.querySelector('.welcome-section');
-        const oldChips = chatContainer.querySelector('.suggestion-chips');
-
-        if (oldWelcome) oldWelcome.remove();
-        if (oldChips) oldChips.remove();
-
-        // add fresh welcome
-        const welcomeHTML = `
-            <div class="welcome-section fade-in">
-                <div class="welcome-icon">🎓</div>
-                <h2 class="welcome-title">Welcome to SMVITM</h2>
-                <p class="welcome-desc">I'm your AI assistant for all things SMVITM.</p>
-            </div>
-            <div class="suggestion-chips" id="suggestion-chips">
-                <button class="chip" data-query="What courses does SMVITM offer?">📚 Courses</button>
-                <button class="chip" data-query="How to get admission in SMVITM?">🎯 Admissions</button>
-                <button class="chip" data-query="Tell me about placements at SMVITM">💼 Placements</button>
-            </div>
-        `;
-
-        chatContainer.insertAdjacentHTML("afterbegin", welcomeHTML);
-
-        // Rebind chip click handler
-        const newChips = document.getElementById('suggestion-chips');
-        if (newChips) {
-            newChips.addEventListener('click', (e) => {
-                const chip = e.target.closest('.chip');
-                if (chip) handleSendMessage(chip.getAttribute('data-query'));
-            });
-        }
-    });
-}
-// close button
-const closeBtn = document.getElementById("close-chat-btn");
-const appWrapper = document.querySelector(".app-wrapper");
-
-    const chatbotToggler = document.getElementById("chatbot-toggler");
-
-    if (closeBtn && appWrapper) {
-        const toggleChat = () => {
-            appWrapper.classList.toggle("hidden");
-            const isHidden = appWrapper.classList.contains("hidden");
-            
-            if (chatbotToggler) {
-                document.querySelector(".toggle-icon-open").style.display = isHidden ? "block" : "none";
-                document.querySelector(".toggle-icon-close").style.display = isHidden ? "none" : "block";
-            }
-            
-            // Signal parent window to resize the iframe if embedded
-            if (window.parent && window.parent !== window) {
-                window.parent.postMessage(isHidden ? "minimizeChat" : "openChat", "*");
-            }
-        };
-
-        closeBtn.addEventListener("click", toggleChat);
-        if (chatbotToggler) {
-            chatbotToggler.addEventListener("click", toggleChat);
-        }
+        return;
     }
+
+    // Minimize window
+    const minBtn = e.target.closest('#minimize-btn');
+    if (minBtn) {
+        const appWrap = document.getElementById('app-wrapper');
+        if (appWrap) {
+            // Add animation before minimizing
+            minBtn.style.transform = 'scale(0.95)';
+            minBtn.style.opacity = '0.7';
+            setTimeout(() => {
+                minBtn.style.transform = 'scale(1)';
+                minBtn.style.opacity = '1';
+                appWrap.classList.add('minimized');
+            }, 150);
+        }
+        return;
+    }
+
+    // Clear chat
+    const clearBtn = e.target.closest('#clear-chat-btn');
+    if (clearBtn) {
+        const container = document.getElementById('chat-container');
+        if (container) {
+            // Add visual feedback
+            clearBtn.style.transform = 'rotate(20deg) scale(0.9)';
+            clearBtn.style.opacity = '0.6';
+            
+            setTimeout(() => {
+                chatStarted = false;
+                
+                // Fade out existing content
+                const messages = container.querySelectorAll('.message, .welcome-section, .suggestion-chips');
+                messages.forEach(msg => {
+                    msg.style.opacity = '0';
+                    msg.style.transform = 'translateY(10px)';
+                    msg.style.transition = 'all 0.2s ease';
+                });
+                
+                setTimeout(() => {
+                    container.innerHTML = `
+                        <div class="welcome-section fade-in">
+                            <div class="welcome-icon">🎓</div>
+                            <h2 class="welcome-title">Welcome to SMVITM</h2>
+                            <p class="welcome-desc">I'm your AI assistant for all things SMVITM. Ask me anything about admissions, departments, placements, or campus life!</p>
+                        </div>
+                        <div class="suggestion-chips" id="suggestion-chips">
+                            <button class="chip" data-query="What courses does SMVITM offer?">📚 Courses Offered</button>
+                            <button class="chip" data-query="How to get admission in SMVITM?">🎯 Admissions</button>
+                            <button class="chip" data-query="Tell me about placements at SMVITM">💼 Placements</button>
+                            <button class="chip" data-query="What PG programs are available?">🎓 PG Programs</button>
+                            <button class="chip" data-query="Tell me about the MBA department">📊 MBA</button>
+                            <button class="chip" data-query="What are the hostel facilities?">🏠 Hostel</button>
+                        </div>
+                    `;
+                    // Remove lingering loading indicators if any
+                    const loadEl = document.getElementById('loading');
+                    if (loadEl) loadEl.remove();
+                    
+                    // Reset button style
+                    clearBtn.style.transform = 'rotate(0deg) scale(1)';
+                    clearBtn.style.opacity = '1';
+                }, 150);
+            }, 50);
+        }
+        return;
+    }
+
+    // Suggestion chips
+    const chip = e.target.closest('.chip');
+    if (chip && e.target.closest('#chat-container')) {
+        const query = chip.getAttribute('data-query');
+        if (query) handleSendMessage(query);
+        return;
+    }
+});
+
 // ===== VOICE MODE =====
 function setVoiceState(state, statusText, subText) {
     voiceOrb.className = state;
