@@ -240,7 +240,8 @@ const appWrapper = document.querySelector(".app-wrapper");
 
 if (closeBtn && appWrapper) {
     closeBtn.addEventListener("click", () => {
-        appWrapper.classList.add("hidden-chat");
+        appWrapper.style.display = "none";
+        document.body.style.display = "block";
     });
 }
 // ===== VOICE MODE =====
