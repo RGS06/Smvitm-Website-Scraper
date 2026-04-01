@@ -247,22 +247,29 @@ if (clearChatBtn) {
 const closeBtn = document.getElementById("close-chat-btn");
 const appWrapper = document.querySelector(".app-wrapper");
 
-if (closeBtn && appWrapper) {
-    closeBtn.addEventListener("click", () => {
-        appWrapper.style.display = "none";
-        
-        // Make background transparent so it doesn't leave a white block over the website
-        document.body.style.background = "transparent";
-        document.documentElement.style.background = "transparent";
-        
-        // Signal parent window to hide the iframe if embedded
-        if (window.parent && window.parent !== window) {
-            window.parent.postMessage("closeChat", "*");
-            window.parent.postMessage({ action: "closeChat" }, "*");
-            window.parent.postMessage({ type: "close" }, "*");
+    const chatbotToggler = document.getElementById("chatbot-toggler");
+
+    if (closeBtn && appWrapper) {
+        const toggleChat = () => {
+            appWrapper.classList.toggle("hidden");
+            const isHidden = appWrapper.classList.contains("hidden");
+            
+            if (chatbotToggler) {
+                document.querySelector(".toggle-icon-open").style.display = isHidden ? "block" : "none";
+                document.querySelector(".toggle-icon-close").style.display = isHidden ? "none" : "block";
+            }
+            
+            // Signal parent window to resize the iframe if embedded
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage(isHidden ? "minimizeChat" : "openChat", "*");
+            }
+        };
+
+        closeBtn.addEventListener("click", toggleChat);
+        if (chatbotToggler) {
+            chatbotToggler.addEventListener("click", toggleChat);
         }
-    });
-}
+    }
 // ===== VOICE MODE =====
 function setVoiceState(state, statusText, subText) {
     voiceOrb.className = state;
