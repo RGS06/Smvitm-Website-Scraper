@@ -21,7 +21,7 @@
     --radius-md: 16px;
     --radius-lg: 24px;
     --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    
+
     /* Responsive Font Sizes */
     --fs-xs: clamp(0.75rem, 2vw, 0.95rem);
     --fs-sm: clamp(0.9rem, 2.5vw, 1.1rem);
@@ -31,7 +31,9 @@
 }
 
 /* ===== GLOBAL RESET ===== */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -46,7 +48,7 @@ html {
 
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: var(--bg-cream);
+    background: transparent;
     min-height: 100dvh;
     min-height: 100vh;
     display: flex;
@@ -97,6 +99,11 @@ body {
     pointer-events: none;
     z-index: 0;
     overflow: hidden;
+    transition: opacity 0.3s ease;
+}
+
+.app-wrapper.minimized .bg-decoration {
+    opacity: 0;
 }
 
 .bg-circle {
@@ -135,10 +142,23 @@ body {
 }
 
 @keyframes floatBg {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    25% { transform: translate(30px, -20px) scale(1.05); }
-    50% { transform: translate(-20px, 30px) scale(0.95); }
-    75% { transform: translate(20px, 20px) scale(1.02); }
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    25% {
+        transform: translate(30px, -20px) scale(1.05);
+    }
+
+    50% {
+        transform: translate(-20px, 30px) scale(0.95);
+    }
+
+    75% {
+        transform: translate(20px, 20px) scale(1.02);
+    }
 }
 
 /* ===== MAIN CONTAINER ===== */
@@ -288,7 +308,7 @@ header::before {
     .title-group h1 {
         font-size: var(--fs-base);
     }
-    
+
     .title-group {
         min-width: 0;
     }
@@ -299,11 +319,11 @@ header::before {
         padding: 10px 12px;
         gap: 8px;
     }
-    
+
     .logo-wrapper {
         display: none;
     }
-    
+
     .title-group h1 {
         font-size: 1rem;
     }
@@ -319,9 +339,20 @@ header::before {
 }
 
 @keyframes pulse-animation {
-    0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); }
-    70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(46, 204, 113, 0); }
-    100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
+    0% {
+        transform: scale(0.9);
+        box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7);
+    }
+
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 8px rgba(46, 204, 113, 0);
+    }
+
+    100% {
+        transform: scale(0.9);
+        box-shadow: 0 0 0 0 rgba(46, 204, 113, 0);
+    }
 }
 
 .header-actions {
@@ -458,11 +489,11 @@ header::before {
     .welcome-section {
         padding: 12px 8px 8px;
     }
-    
+
     .welcome-icon {
         font-size: 2.5rem;
     }
-    
+
     .welcome-title {
         font-size: 1.1rem;
     }
@@ -511,7 +542,7 @@ header::before {
     .suggestion-chips {
         gap: 5px;
     }
-    
+
     .chip {
         padding: 6px 10px;
         font-size: 0.75rem;
@@ -542,7 +573,9 @@ header::before {
 }
 
 /* Bot message markdown styling */
-.bot-message h1, .bot-message h2, .bot-message h3 {
+.bot-message h1,
+.bot-message h2,
+.bot-message h3 {
     color: var(--maroon);
     font-size: clamp(0.95rem, 2vw, 1.1rem);
     font-weight: 700;
@@ -551,7 +584,9 @@ header::before {
     border-bottom: 1px solid var(--chandan-pale);
 }
 
-.bot-message h1:first-child, .bot-message h2:first-child, .bot-message h3:first-child {
+.bot-message h1:first-child,
+.bot-message h2:first-child,
+.bot-message h3:first-child {
     margin-top: 0;
 }
 
@@ -568,7 +603,8 @@ header::before {
     margin-bottom: 0;
 }
 
-.bot-message ul, .bot-message ol {
+.bot-message ul,
+.bot-message ol {
     margin: 6px 0 8px clamp(12px, 3vw, 20px);
     padding: 0;
 }
@@ -610,7 +646,8 @@ header::before {
     overflow-x: auto;
 }
 
-.bot-message th, .bot-message td {
+.bot-message th,
+.bot-message td {
     border: 1px solid var(--border-light);
     padding: clamp(4px, 1vw, 8px);
     text-align: left;
@@ -655,12 +692,27 @@ header::before {
     animation: loadBounce 1.2s infinite;
 }
 
-.loading-dots span:nth-child(2) { animation-delay: 0.15s; }
-.loading-dots span:nth-child(3) { animation-delay: 0.3s; }
+.loading-dots span:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+.loading-dots span:nth-child(3) {
+    animation-delay: 0.3s;
+}
 
 @keyframes loadBounce {
-    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
-    30% { transform: translateY(-8px); opacity: 1; }
+
+    0%,
+    60%,
+    100% {
+        transform: translateY(0);
+        opacity: 0.4;
+    }
+
+    30% {
+        transform: translateY(-8px);
+        opacity: 1;
+    }
 }
 
 /* ===== INPUT AREA ===== */
@@ -787,7 +839,7 @@ header::before {
         min-height: 54px;
         align-items: flex-end;
     }
-    
+
     .input-action-btn,
     #send-btn {
         width: 38px;
@@ -857,8 +909,15 @@ header::before {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* ===== FLOATING TOGGLE BUTTON ===== */
@@ -959,13 +1018,21 @@ header::before {
     animation: loadBounce 1.2s infinite;
 }
 
-.loading-dots span:nth-child(2) { animation-delay: 0.15s; }
-.loading-dots span:nth-child(3) { animation-delay: 0.3s; }
+.loading-dots span:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+.loading-dots span:nth-child(3) {
+    animation-delay: 0.3s;
+}
 
 /* ===== VOICE OVERLAY ===== */
 #voice-overlay {
     position: fixed;
-    top: 0; left: 0; width: 100vw; height: 100vh;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
     background: linear-gradient(135deg, rgba(253, 248, 240, 0.97), rgba(245, 230, 196, 0.97));
     backdrop-filter: blur(20px);
     z-index: 1000;
@@ -991,12 +1058,14 @@ header::before {
 
 #close-voice-btn {
     position: absolute;
-    top: 30px; right: 30px;
+    top: 30px;
+    right: 30px;
     background: rgba(133, 18, 44, 0.08);
     border: 1px solid rgba(133, 18, 44, 0.1);
     color: var(--maroon);
     font-size: 1.3rem;
-    width: 48px; height: 48px;
+    width: 48px;
+    height: 48px;
     border-radius: 14px;
     cursor: pointer;
     transition: var(--transition);
@@ -1073,23 +1142,51 @@ header::before {
 }
 
 @keyframes floatOrb {
-    0%, 100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-12px) scale(1.04); box-shadow: 0 0 50px rgba(195, 138, 46, 0.7); }
+
+    0%,
+    100% {
+        transform: translateY(0) scale(1);
+    }
+
+    50% {
+        transform: translateY(-12px) scale(1.04);
+        box-shadow: 0 0 50px rgba(195, 138, 46, 0.7);
+    }
 }
 
 @keyframes listenPulse {
-    0% { transform: scale(1.1); box-shadow: 0 0 30px rgba(231, 76, 60, 0.4); }
-    50% { transform: scale(1.25); box-shadow: 0 0 60px rgba(231, 76, 60, 0.8); }
-    100% { transform: scale(1.1); box-shadow: 0 0 30px rgba(231, 76, 60, 0.4); }
+    0% {
+        transform: scale(1.1);
+        box-shadow: 0 0 30px rgba(231, 76, 60, 0.4);
+    }
+
+    50% {
+        transform: scale(1.25);
+        box-shadow: 0 0 60px rgba(231, 76, 60, 0.8);
+    }
+
+    100% {
+        transform: scale(1.1);
+        box-shadow: 0 0 30px rgba(231, 76, 60, 0.4);
+    }
 }
 
 @keyframes spinRotate {
-    100% { transform: rotate(360deg) scale(1.08); }
+    100% {
+        transform: rotate(360deg) scale(1.08);
+    }
 }
 
 @keyframes speakPulse {
-    0% { transform: scale(1); box-shadow: 0 0 35px rgba(133, 18, 44, 0.5); }
-    100% { transform: scale(1.18); box-shadow: 0 0 70px rgba(133, 18, 44, 0.9); }
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 35px rgba(133, 18, 44, 0.5);
+    }
+
+    100% {
+        transform: scale(1.18);
+        box-shadow: 0 0 70px rgba(133, 18, 44, 0.9);
+    }
 }
 
 #voice-subtext {
@@ -1161,94 +1258,97 @@ header::before {
     :root {
         font-size: 15px;
     }
-    
+
     .glass-container {
         width: clamp(280px, 88vw, 380px);
         height: clamp(480px, 72dvh, 600px);
         border-radius: 12px;
     }
-    
+
     header {
         gap: 10px;
         padding: 12px 14px;
         flex-shrink: 0;
     }
-    
+
     #chat-container {
         flex: 1 1 auto;
         min-height: 0;
     }
-    
+
     .input-area {
         flex-shrink: 0;
     }
-    
+
     .chat-footer {
         flex-shrink: 0;
     }
-    
+
     .logo-wrapper {
         width: 40px;
         height: 40px;
     }
-    
+
     .title-group h1 {
         font-size: 1.15rem;
         font-weight: 700;
     }
-    
+
     .status {
         font-size: 0.8rem;
     }
-    
+
     .message {
         max-width: 100%;
         font-size: 0.95rem;
         padding: 10px 12px;
     }
-    
+
     .welcome-icon {
         font-size: 2.2rem;
     }
-    
+
     .welcome-title {
         font-size: 1.15rem;
     }
-    
+
     .welcome-desc {
         font-size: 0.95rem;
     }
-    
+
     #chat-container {
         padding: 12px;
         gap: 10px;
     }
-    
+
     .suggestion-chips {
         gap: 6px;
     }
-    
+
     .chip {
         padding: 8px 12px;
         font-size: 0.85rem;
         flex: 1 1 calc(50% - 3px);
     }
-    
+
     .input-area {
         padding: 10px 12px;
         gap: 8px;
     }
-    
+
     #user-input {
         font-size: 0.95rem;
         padding: 10px 12px;
     }
-    
-    .bot-message h1, .bot-message h2, .bot-message h3 {
+
+    .bot-message h1,
+    .bot-message h2,
+    .bot-message h3 {
         font-size: 1rem;
     }
-    
-    .bot-message ul, .bot-message ol {
+
+    .bot-message ul,
+    .bot-message ol {
         margin: 6px 0 8px 14px;
     }
 }
@@ -1258,101 +1358,103 @@ header::before {
     :root {
         font-size: 16px;
     }
-    
+
     .glass-container {
         width: clamp(300px, 88vw, 480px);
         height: clamp(520px, 78dvh, 680px);
         border-radius: 12px;
     }
-    
+
     header {
         padding: 14px 16px;
         gap: 12px;
         flex-shrink: 0;
     }
-    
+
     #chat-container {
         flex: 1 1 auto;
         min-height: 0;
     }
-    
+
     .input-area {
         flex-shrink: 0;
     }
-    
+
     .chat-footer {
         flex-shrink: 0;
     }
-    
+
     .logo-wrapper {
         width: 44px;
         height: 44px;
     }
-    
+
     .title-group h1 {
         font-size: 1.2rem;
         font-weight: 700;
     }
-    
+
     .status {
         font-size: 0.85rem;
     }
-    
+
     #chat-container {
         padding: 14px;
         gap: 12px;
     }
-    
+
     .welcome-icon {
         font-size: 2.6rem;
     }
-    
+
     .welcome-title {
         font-size: 1.25rem;
     }
-    
+
     .welcome-desc {
         font-size: 0.95rem;
     }
-    
+
     .suggestion-chips {
         gap: 8px;
     }
-    
+
     .chip {
         padding: 10px 14px;
         font-size: 0.9rem;
         flex: 1 1 calc(50% - 4px);
     }
-    
+
     .message {
         max-width: 85%;
         font-size: 0.95rem;
         padding: 10px 14px;
     }
-    
+
     .bot-message {
         max-width: 88%;
     }
-    
+
     .user-message {
         max-width: 85%;
     }
-    
+
     .input-area {
         padding: 12px 14px;
         gap: 10px;
     }
-    
+
     #user-input {
         font-size: 0.95rem;
         padding: 10px 14px;
     }
-    
-    .bot-message h1, .bot-message h2, .bot-message h3 {
+
+    .bot-message h1,
+    .bot-message h2,
+    .bot-message h3 {
         font-size: 1.05rem;
     }
-    
+
     .source-link {
         font-size: 0.8rem;
         padding: 5px 10px;
@@ -1365,11 +1467,11 @@ header::before {
         width: min(90vw, 500px);
         height: min(85vh, 650px);
     }
-    
+
     header {
         padding: 14px 16px;
     }
-    
+
     .message {
         max-width: 85%;
     }
@@ -1381,15 +1483,15 @@ header::before {
         width: min(85vw, 520px);
         height: min(90vh, 700px);
     }
-    
+
     #chat-container {
         padding: 16px;
     }
-    
+
     .suggestion-chips {
         justify-content: flex-start;
     }
-    
+
     .chip {
         flex: 0 1 auto;
     }
@@ -1401,16 +1503,16 @@ header::before {
         width: min(35vw, 520px);
         height: min(85vh, 750px);
     }
-    
+
     .app-wrapper {
         bottom: clamp(20px, 3vw, 32px);
         right: clamp(20px, 3vw, 32px);
     }
-    
+
     header {
         padding: 16px 20px;
     }
-    
+
     #send-btn {
         width: 44px;
         height: 44px;
@@ -1422,21 +1524,21 @@ header::before {
     :root {
         font-size: 16px;
     }
-    
+
     .glass-container {
         width: min(30vw, 550px);
         height: min(85vh, 750px);
     }
-    
+
     .app-wrapper {
         bottom: 32px;
         right: 32px;
     }
-    
+
     header {
         padding: 18px 22px;
     }
-    
+
     .message {
         max-width: 80%;
     }
@@ -1447,12 +1549,12 @@ header::before {
     :root {
         font-size: 17px;
     }
-    
+
     .glass-container {
         width: min(26vw, 600px);
         height: min(88vh, 800px);
     }
-    
+
     .app-wrapper {
         bottom: 40px;
         right: 40px;
@@ -1464,18 +1566,18 @@ header::before {
     :root {
         font-size: 18px;
     }
-    
+
     .glass-container {
         width: min(24vw, 650px);
         height: min(87vh, 850px);
     }
-    
+
     .app-wrapper {
         bottom: 48px;
         right: 48px;
         gap: 24px;
     }
-    
+
     .chat-toggle-btn {
         padding: 0 36px;
         font-size: 1.2rem;
@@ -1489,12 +1591,12 @@ header::before {
     body {
         min-height: 100vh;
     }
-    
+
     @media (max-width: 640px) {
         .glass-container {
             height: 100vh;
         }
-        
+
         #chat-container {
             max-height: calc(100vh - 140px);
         }
@@ -1502,7 +1604,8 @@ header::before {
 }
 
 /* ===== RETINA DISPLAY OPTIMIZATION ===== */
-@media (min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+@media (min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
     * {
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
@@ -1514,7 +1617,7 @@ header::before {
     .header-btn {
         border: 2px solid rgba(255, 255, 255, 0.4);
     }
-    
+
     .message {
         border-width: 2px;
     }
