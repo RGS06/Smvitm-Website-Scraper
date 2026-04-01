@@ -202,27 +202,38 @@ if (suggestionChips) {
 // Clear chat
 if (clearChatBtn) {
     clearChatBtn.addEventListener('click', () => {
-        // Remove all messages but keep structure
+
+        // clear only messages
         const messages = chatContainer.querySelectorAll('.message');
         messages.forEach(m => m.remove());
-        
-        // Re-add welcome section
+
+        // reset welcome cleanly WITHOUT nuking container
         chatStarted = false;
-        chatContainer.innerHTML = `
+
+        // remove old welcome if exists
+        const oldWelcome = chatContainer.querySelector('.welcome-section');
+        const oldChips = chatContainer.querySelector('.suggestion-chips');
+
+        if (oldWelcome) oldWelcome.remove();
+        if (oldChips) oldChips.remove();
+
+        // add fresh welcome
+        const welcomeHTML = `
             <div class="welcome-section fade-in">
                 <div class="welcome-icon">🎓</div>
                 <h2 class="welcome-title">Welcome to SMVITM</h2>
-                <p class="welcome-desc">I'm your AI assistant for all things SMVITM. Ask me anything about admissions, departments, placements, or campus life!</p>
+                <p class="welcome-desc">I'm your AI assistant for all things SMVITM.</p>
             </div>
             <div class="suggestion-chips" id="suggestion-chips">
-                <button class="chip" data-query="What courses does SMVITM offer?">📚 Courses Offered</button>
+                <button class="chip" data-query="What courses does SMVITM offer?">📚 Courses</button>
                 <button class="chip" data-query="How to get admission in SMVITM?">🎯 Admissions</button>
                 <button class="chip" data-query="Tell me about placements at SMVITM">💼 Placements</button>
-                <button class="chip" data-query="What PG programs are available?">🎓 PG Programs</button>
-                <button class="chip" data-query="Tell me about the MBA department">📊 MBA</button>
-                <button class="chip" data-query="What are the hostel facilities?">🏠 Hostel</button>
             </div>
         `;
+
+        chatContainer.insertAdjacentHTML("afterbegin", welcomeHTML);
+    });
+}
 
         // Rebind chip click handler
         const newChips = document.getElementById('suggestion-chips');
