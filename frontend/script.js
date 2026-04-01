@@ -234,7 +234,15 @@ if (clearChatBtn) {
         }
     });
 }
+// close button
+const closeBtn = document.getElementById("close-chat-btn");
+const chatApp = document.getElementById("chat-app");
 
+if (closeBtn && chatApp) {
+    closeBtn.addEventListener("click", () => {
+        chatApp.style.display = "none";
+    });
+}
 // ===== VOICE MODE =====
 function setVoiceState(state, statusText, subText) {
     voiceOrb.className = state;
