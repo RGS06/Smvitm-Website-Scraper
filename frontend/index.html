@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SMVITM Chatbot | Shri Madhwa Vadiraja Institute of Technology & Management</title>
     <meta name="description" content="AI-powered virtual assistant for SMVITM Bantakal. Ask about admissions, departments, placements, campus life and more.">
-    <link rel="stylesheet" href="/static/style.css?v=21">
+    <link rel="stylesheet" href="/static/style.css?v=24">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="/static/marked.min.js"></script>
     <link rel="icon" href="https://sode-edu.in/smvitm/wp-content/themes/sode-20/images/smvitm-college-logo.png" type="image/png">
@@ -22,6 +22,20 @@
             <p id="voice-subtext">Click the orb to start speaking.</p>
         </div>
     </div>
+
+    <!-- Floating Chatbot Toggler -->
+    <button id="chatbot-toggler" class="chatbot-toggler" title="Toggle Chat">
+        <span class="toggle-icon-open">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+            </svg>
+        </span>
+        <span class="toggle-icon-close" style="display: none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+        </span>
+    </button>
 
     <div class="app-wrapper">
         <!-- Background decoration -->
@@ -50,8 +64,10 @@
         </svg>
     </button>
 
-    <button id="close-chat-btn" title="Close Chat" class="header-btn close-btn">
-        ✖
+    <button id="close-chat-btn" title="Minimize Chat" class="header-btn close-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+            <path d="M5 12h14"/>
+        </svg>
     </button>
 
 </div>
@@ -95,6 +111,6 @@
         </div>
     </div>
 
-    <script src="/static/script.js?v=23"></script>
+    <script src="/static/script.js?v=24"></script>
 </body>
 </html>
