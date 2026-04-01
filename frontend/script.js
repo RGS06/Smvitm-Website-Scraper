@@ -232,8 +232,6 @@ if (clearChatBtn) {
         `;
 
         chatContainer.insertAdjacentHTML("afterbegin", welcomeHTML);
-    });
-}
 
         // Rebind chip click handler
         const newChips = document.getElementById('suggestion-chips');
@@ -252,7 +250,17 @@ const appWrapper = document.querySelector(".app-wrapper");
 if (closeBtn && appWrapper) {
     closeBtn.addEventListener("click", () => {
         appWrapper.style.display = "none";
-        document.body.style.display = "block";
+        
+        // Make background transparent so it doesn't leave a white block over the website
+        document.body.style.background = "transparent";
+        document.documentElement.style.background = "transparent";
+        
+        // Signal parent window to hide the iframe if embedded
+        if (window.parent && window.parent !== window) {
+            window.parent.postMessage("closeChat", "*");
+            window.parent.postMessage({ action: "closeChat" }, "*");
+            window.parent.postMessage({ type: "close" }, "*");
+        }
     });
 }
 // ===== VOICE MODE =====
