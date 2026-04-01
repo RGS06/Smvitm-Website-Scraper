@@ -843,3 +843,9 @@ header::before {
 #chat-app {
     z-index: 9999 !important;
 }
+.hidden-chat {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: 0.3s ease;
+}
