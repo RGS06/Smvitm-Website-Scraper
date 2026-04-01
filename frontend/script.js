@@ -39,6 +39,19 @@ const voiceOrb = document.getElementById('voice-orb');
 const voiceStatus = document.getElementById('voice-status');
 const voiceSubtext = document.getElementById('voice-subtext');
 
+// If this project is embedded as an iframe, respond to parent events.
+window.addEventListener('message', (event) => {
+    if (event.data === 'chat-maximized') {
+        const appWrap = document.getElementById('app-wrapper');
+        const input = document.getElementById('user-input');
+        if (appWrap) appWrap.classList.remove('minimized');
+        if (input) input.focus();
+    } else if (event.data === 'chat-minimized') {
+        const appWrap = document.getElementById('app-wrapper');
+        if (appWrap) appWrap.classList.add('minimized');
+    }
+});
+
 // --- Helper: Remove welcome section & chips on first message ---
 function hideWelcome() {
     if (chatStarted) return;
@@ -71,7 +84,7 @@ function appendMessage(message, isBot = false, sources = []) {
     if (isBot && sources.length > 0) {
         content += '<div class="sources">';
         // Handle both simple URL strings and {title, url} objects
-        const uniqueSources = sources.filter((s, index, self) =>
+        const uniqueSources = sources.filter((s, index, self) => 
             s && (typeof s === 'string' ? s.startsWith('http') : (s.url && s.url.startsWith('http'))) &&
             self.findIndex(t => (typeof t === 'string' ? t : (t.url || t)) === (typeof s === 'string' ? s : (s.url || s))) === index
         );
@@ -103,7 +116,7 @@ function extractLabel(url) {
             const last = parts[parts.length - 1];
             return last.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
         }
-    } catch { }
+    } catch {}
     return 'Learn more';
 }
 
@@ -169,7 +182,7 @@ async function handleSendMessage(text, retryCount = 0) {
     } catch (error) {
         console.error('Error:', error);
         removeLoading();
-
+        
         if (error.name === 'AbortError') {
             if (retryCount < maxRetries) {
                 console.log(`Timeout. Retrying (attempt ${retryCount + 1}/${maxRetries})...`);
@@ -198,14 +211,7 @@ document.addEventListener('click', (e) => {
     if (toggleBtn) {
         const appWrap = document.getElementById('app-wrapper');
         const input = document.getElementById('user-input');
-        if (appWrap) {
-            appWrap.classList.toggle('minimized');
-            if (appWrap.classList.contains('minimized')) {
-                window.parent.postMessage('chat-minimized', '*');
-            } else {
-                window.parent.postMessage('chat-maximized', '*');
-            }
-        }
+        if (appWrap) appWrap.classList.toggle('minimized');
         if (appWrap && !appWrap.classList.contains('minimized') && input) {
             input.focus();
         }
@@ -224,7 +230,11 @@ document.addEventListener('click', (e) => {
                 minBtn.style.transform = 'scale(1)';
                 minBtn.style.opacity = '1';
                 appWrap.classList.add('minimized');
-                window.parent.postMessage('chat-minimized', '*');
+
+                // If embedded in an iframe, notify parent to hide the iframe container
+                if (window.parent && window.parent !== window) {
+                    window.parent.postMessage('chat-minimized', '*');
+                }
             }, 150);
         }
         return;
@@ -238,10 +248,10 @@ document.addEventListener('click', (e) => {
             // Add visual feedback
             clearBtn.style.transform = 'rotate(20deg) scale(0.9)';
             clearBtn.style.opacity = '0.6';
-
+            
             setTimeout(() => {
                 chatStarted = false;
-
+                
                 // Fade out existing content
                 const messages = container.querySelectorAll('.message, .welcome-section, .suggestion-chips');
                 messages.forEach(msg => {
@@ -249,7 +259,7 @@ document.addEventListener('click', (e) => {
                     msg.style.transform = 'translateY(10px)';
                     msg.style.transition = 'all 0.2s ease';
                 });
-
+                
                 setTimeout(() => {
                     container.innerHTML = `
                         <div class="welcome-section fade-in">
@@ -269,7 +279,7 @@ document.addEventListener('click', (e) => {
                     // Remove lingering loading indicators if any
                     const loadEl = document.getElementById('loading');
                     if (loadEl) loadEl.remove();
-
+                    
                     // Reset button style
                     clearBtn.style.transform = 'rotate(0deg) scale(1)';
                     clearBtn.style.opacity = '1';
@@ -297,7 +307,7 @@ function setVoiceState(state, statusText, subText) {
 
 function cleanupAudio() {
     if (audioContext) {
-        audioContext.close().catch(() => { });
+        audioContext.close().catch(() => {});
         audioContext = null;
     }
     if (animationId) cancelAnimationFrame(animationId);
@@ -374,7 +384,7 @@ closeVoiceBtn.addEventListener('click', () => {
 // Orb click handler
 voiceOrb.addEventListener('click', async () => {
     const state = voiceOrb.className;
-
+    
     if (state === 'idle' || state === 'speaking' || state === 'error') {
         // Start recording
         if (currentAudio) { currentAudio.pause(); currentAudio = null; }
