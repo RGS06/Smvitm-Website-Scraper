@@ -209,18 +209,31 @@ document.addEventListener('click', (e) => {
     // Chat Widget Toggle
     const toggleBtn = e.target.closest('#chat-toggle-btn');
     if (toggleBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+
         const appWrap = document.getElementById('app-wrapper');
         const input = document.getElementById('user-input');
+
         if (appWrap) {
-            const isMinimized = appWrap.classList.contains('minimized');
-            appWrap.classList.toggle('minimized');
-            
-            // Force browser reflow to guarantee CSS transition fires
-            void appWrap.offsetHeight;
-            
-            // Focus input when opening
-            if (isMinimized && input) {
-                setTimeout(() => input.focus(), 30);
+            const isCurrentlyMinimized = appWrap.classList.contains('minimized');
+
+            if (isCurrentlyMinimized) {
+                // OPEN: remove minimized class (keep wrapper visible for toggle button)
+                appWrap.classList.remove('minimized');
+                void appWrap.offsetHeight;
+
+                if (input) {
+                    setTimeout(() => input.focus(), 50);
+                }
+            } else {
+                // CLOSE: add minimized class (chat panel hidden but toggle remains)
+                appWrap.classList.add('minimized');
+                void appWrap.offsetHeight;
+
+                if (window.parent && window.parent !== window) {
+                    window.parent.postMessage('chat-minimized', '*');
+                }
             }
         }
         return;
