@@ -236,11 +236,11 @@ if (clearChatBtn) {
 }
 // close button
 const closeBtn = document.getElementById("close-chat-btn");
-const chatApp = document.getElementById("chat-app");
+const appWrapper = document.querySelector(".app-wrapper");
 
-if (closeBtn && chatApp) {
+if (closeBtn && appWrapper) {
     closeBtn.addEventListener("click", () => {
-        chatApp.style.display = "none";
+        appWrapper.classList.add("hidden-chat");
     });
 }
 // ===== VOICE MODE =====
