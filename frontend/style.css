@@ -849,3 +849,10 @@ header::before {
     pointer-events: none;
     transition: 0.3s ease;
 }
+body.chat-hidden {
+    display: block !important;
+}
+
+.app-wrapper.chat-hidden {
+    display: none !important;
+}
